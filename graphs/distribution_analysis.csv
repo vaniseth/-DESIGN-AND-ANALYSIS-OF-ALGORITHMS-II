@@ -1,0 +1,7 @@
+Distribution,Implementation,CollisionRate,AvgProbes,MaxLength,InsertTime
+Uniform,Chaining,0.2578,0.32,7,2.89
+Uniform,Linear Probing,0.2389,1.45,24,1.99
+PowerLaw,Chaining,0.0015,1.05,3,1.00
+PowerLaw,Linear Probing,0.0157,1.02,5,0.99
+Adversarial,Chaining,0.2584,0.32,6,2.85
+Adversarial,Linear Probing,0.2399,1.45,21,1.85
