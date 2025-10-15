@@ -210,8 +210,7 @@ public class WordFrequencyCounter {
         // Test Chaining with different hash functions
         HashFunction<String>[] hashFunctions = new HashFunction[]{
                 new PolynomialHash(),
-                new FNV1aHash(),
-                new MurmurHash3()
+                new SHA256Hash()
         };
 
         for (HashFunction<String> hf : hashFunctions) {

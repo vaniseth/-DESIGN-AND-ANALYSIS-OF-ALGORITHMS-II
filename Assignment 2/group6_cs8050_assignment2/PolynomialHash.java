@@ -1,7 +1,7 @@
 package group6_cs8050_assignment2;
 
 public class PolynomialHash implements HashFunction<String> {
-    private static final int BASE = 31;
+    private static final int BASE = 31; //uses base-31 polynomial
 
     @Override
     public int hash(String key, int tableSize) {

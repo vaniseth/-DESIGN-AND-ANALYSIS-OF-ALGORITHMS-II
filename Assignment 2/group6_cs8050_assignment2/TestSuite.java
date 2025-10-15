@@ -155,7 +155,7 @@ public class TestSuite {
         System.out.println("\n=== Testing Open Addressing (Quadratic Probing) ===\n");
 
         OpenAddressingHashTable<String, Integer> dict =
-                new OpenAddressingHashTable<>(4, 0.5, new MurmurHash3(),
+                new OpenAddressingHashTable<>(4, 0.5, new PolynomialHash(),
                         OpenAddressingHashTable.ProbingStrategy.QUADRATIC);
 
         // Insert items
@@ -177,7 +177,7 @@ public class TestSuite {
         System.out.println("\n=== Testing Cuckoo Hashing ===\n");
 
         CuckooHashTable<String, Integer> dict =
-                new CuckooHashTable<>(new PolynomialHash(), new MurmurHash3());
+                new CuckooHashTable<>(new PolynomialHash(), new SHA256Hash());
 
         // Insert items
         for (int i = 0; i < 50; i++) {
@@ -205,8 +205,6 @@ public class TestSuite {
 
         HashFunction<String>[] hashFunctions = new HashFunction[]{
                 new PolynomialHash(),
-                new FNV1aHash(),
-                new MurmurHash3(),
                 new SHA256Hash()
         };
 
@@ -256,7 +254,7 @@ public class TestSuite {
         System.out.println("\n=== Testing Resizing ===\n");
 
         OpenAddressingHashTable<String, Integer> dict =
-                new OpenAddressingHashTable<>(2, 0.5, new MurmurHash3(),
+                new OpenAddressingHashTable<>(2, 0.5, new PolynomialHash(),
                         OpenAddressingHashTable.ProbingStrategy.LINEAR);
 
         int initialCapacity = dict.getCapacity();
@@ -318,7 +316,7 @@ public class TestSuite {
     private static void testPerformance() {
         System.out.println("\n=== Testing Performance ===\n");
 
-        HashFunction<String> hf = new MurmurHash3();
+        HashFunction<String> hf = new PolynomialHash();
         int testSize = 10000;
 
         // Generate test data

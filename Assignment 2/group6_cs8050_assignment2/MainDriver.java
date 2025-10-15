@@ -64,7 +64,7 @@ public class MainDriver {
     }
 
     /**
-     * Demonstrate different hash functions
+     * Demonstration of different hash functions
      */
     private static void demonstrateHashFunctions() {
         System.out.println("\n=== 2. Hash Function Comparison ===\n");
@@ -74,8 +74,6 @@ public class MainDriver {
 
         HashFunction<String>[] hashFunctions = new HashFunction[]{
                 new PolynomialHash(),
-                new FNV1aHash(),
-                new MurmurHash3(),
                 new SHA256Hash()
         };
 
@@ -115,7 +113,7 @@ public class MainDriver {
             keys[i] = "key_" + i;
         }
 
-        HashFunction<String> hf = new MurmurHash3();
+        HashFunction<String> hf = new PolynomialHash();
 
         // Linear Probing
         System.out.println("Testing Linear Probing:");
@@ -155,15 +153,15 @@ public class MainDriver {
         System.out.println("Sample text size: " + sampleText.length() + " characters\n");
 
         // Test with Chaining Hash Table
-        System.out.println("Testing with Chaining Hash Table (MurmurHash3):");
-        ChainingHashTable<String, Integer> chainingDict = new ChainingHashTable<>(new MurmurHash3());
+        System.out.println("Testing with Chaining Hash Table (Polynomial):");
+        ChainingHashTable<String, Integer> chainingDict = new ChainingHashTable<>(new PolynomialHash());
         WordFrequencyCounter counter1 = new WordFrequencyCounter(chainingDict);
         counter1.processText(sampleText);
         System.out.println(counter1.getStatistics());
 
-        System.out.println("\nTesting with Open Addressing (Linear Probing, FNV1a):");
+        System.out.println("\nTesting with Open Addressing (Linear Probing, SHA-256):");
         OpenAddressingHashTable<String, Integer> openDict =
-                new OpenAddressingHashTable<>(new FNV1aHash(),
+                new OpenAddressingHashTable<>(new SHA256Hash(),
                         OpenAddressingHashTable.ProbingStrategy.LINEAR);
         WordFrequencyCounter counter2 = new WordFrequencyCounter(openDict);
         counter2.processText(sampleText);
@@ -194,7 +192,7 @@ public class MainDriver {
         double[] loadFactors = {0.5, 0.75};
         HashFunction<String>[] hashFunctions = new HashFunction[]{
                 new PolynomialHash(),
-                new MurmurHash3()
+                new SHA256Hash()
         };
 
         System.out.println("Testing with 10,000 keys...\n");
@@ -254,7 +252,7 @@ public class MainDriver {
         System.out.println("\n=== 6. Load Factor Impact Analysis ===\n");
 
         double[] loadFactors = {0.25, 0.5, 0.75, 0.9, 0.95};
-        HashFunction<String> hf = new MurmurHash3();
+        HashFunction<String> hf = new PolynomialHash();
 
         List<String> keys = new ArrayList<>();
         for (int i = 0; i < 5000; i++) {
@@ -317,7 +315,7 @@ public class MainDriver {
         System.out.println("\n=== Testing with Real Text File ===\n");
 
         try {
-            ChainingHashTable<String, Integer> dict = new ChainingHashTable<>(new MurmurHash3());
+            ChainingHashTable<String, Integer> dict = new ChainingHashTable<>(new PolynomialHash());
             WordFrequencyCounter counter = new WordFrequencyCounter(dict);
             counter.processFile(filename);
             System.out.println(counter.getStatistics());
@@ -341,18 +339,12 @@ public class MainDriver {
             case "polynomial":
                 hf = new PolynomialHash();
                 break;
-            case "fnv1a":
-                hf = new FNV1aHash();
-                break;
-            case "murmur":
-                hf = new MurmurHash3();
-                break;
             case "sha256":
                 hf = new SHA256Hash();
                 break;
             default:
-                System.out.println("Unknown hash function, using MurmurHash3");
-                hf = new MurmurHash3();
+                System.out.println("Unknown hash function, using PolynomialHash");
+                hf = new PolynomialHash();
         }
 
         List<String> keys = new ArrayList<>();

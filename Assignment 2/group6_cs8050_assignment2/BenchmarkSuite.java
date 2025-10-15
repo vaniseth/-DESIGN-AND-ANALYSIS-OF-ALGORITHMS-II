@@ -59,8 +59,7 @@ public class BenchmarkSuite {
         // Test different hash functions
         HashFunction<String>[] hashFunctions = new HashFunction[]{
                 new PolynomialHash(),
-                new FNV1aHash(),
-                new MurmurHash3()
+                new SHA256Hash()
         };
 
         // Test different key distributions

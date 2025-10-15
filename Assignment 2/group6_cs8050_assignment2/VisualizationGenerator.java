@@ -21,7 +21,7 @@ public class VisualizationGenerator {
             double[] loadFactors = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95};
             HashFunction<String>[] hashFunctions = new HashFunction[]{
                     new PolynomialHash(),
-                    new MurmurHash3()
+                    new SHA256Hash()
             };
 
             List<String> keys = generateTestKeys(5000);
@@ -94,8 +94,6 @@ public class VisualizationGenerator {
             int[] dataSizes = {100, 500, 1000, 5000, 10000, 50000};
             HashFunction<String>[] hashFunctions = new HashFunction[]{
                     new PolynomialHash(),
-                    new FNV1aHash(),
-                    new MurmurHash3(),
                     new SHA256Hash()
             };
 
@@ -135,7 +133,7 @@ public class VisualizationGenerator {
             writer.println("DataSize,Implementation,TotalInsertTime,TotalFindTime,AvgInsertTime,AvgFindTime");
 
             int[] dataSizes = {1000, 5000, 10000, 25000, 50000, 100000};
-            HashFunction<String> hf = new MurmurHash3();
+            HashFunction<String> hf = new PolynomialHash();
 
             for (int dataSize : dataSizes) {
                 List<String> keys = generateTestKeys(dataSize);
@@ -226,7 +224,7 @@ public class VisualizationGenerator {
             writer.println("Distribution,Implementation,CollisionRate,AvgProbes,MaxLength,InsertTime");
 
             int dataSize = 10000;
-            HashFunction<String> hf = new MurmurHash3();
+            HashFunction<String> hf = new PolynomialHash();
 
             String[] distributions = {"Uniform", "PowerLaw", "Adversarial"};
 

@@ -11,6 +11,7 @@ public class SHA256Hash implements HashFunction<String> {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = md.digest(key.getBytes());
 
+            //convert 4 bytes into int
             int hash = 0;
             for (int i = 0; i < 4 && i < hashBytes.length; i++) {
                 hash = (hash << 8) | (hashBytes[i] & 0xFF);
