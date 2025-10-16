@@ -459,7 +459,7 @@ public class VisualizationGenerator {
      */
     public static void generateAll() {
         try {
-            System.out.println("\n=== Generating All Visualization Data ===\n");
+            System.out.println("\n Generating All Visualization Data \n");
 
             generateLoadFactorAnalysis("load_factor_analysis.csv");
             generateCollisionAnalysis("collision_analysis.csv");
@@ -478,10 +478,7 @@ public class VisualizationGenerator {
      * Main method to run visualization generation standalone
      */
     public static void main(String[] args) {
-        System.out.println("╔════════════════════════════════════════════════════════════╗");
-        System.out.println("║   Visualization Data Generator                             ║");
-        System.out.println("║   CS 8050 - Assignment 2                                   ║");
-        System.out.println("╚════════════════════════════════════════════════════════════╝\n");
+        System.out.println("Visualization Data Generator \n");
 
         if (args.length > 0) {
             // Generate specific analysis based on command line argument
@@ -527,11 +524,11 @@ public class VisualizationGenerator {
             generateAll();
         }
 
-        System.out.println("\n✓ Done!");
+        System.out.println("\n Done!");
     }
 
     private static void printUsage() {
-        System.out.println("\nUsage: java group1_cs8050_assignment2.VisualizationGenerator [option]");
+        System.out.println("\nUsage: java group6_cs8050_assignment2.VisualizationGenerator [option]");
         System.out.println("\nOptions:");
         System.out.println("  all          - Generate all visualization data (default)");
         System.out.println("  loadfactor   - Generate load factor analysis only");
@@ -540,8 +537,8 @@ public class VisualizationGenerator {
         System.out.println("  distribution - Generate distribution analysis only");
         System.out.println("  plot         - Generate Python plotting script only");
         System.out.println("\nExamples:");
-        System.out.println("  java group1_cs8050_assignment2.VisualizationGenerator");
-        System.out.println("  java group1_cs8050_assignment2.VisualizationGenerator all");
-        System.out.println("  java group1_cs8050_assignment2.VisualizationGenerator loadfactor");
+        System.out.println("  java group6_cs8050_assignment2.VisualizationGenerator");
+        System.out.println("  java group6_cs8050_assignment2.VisualizationGenerator all");
+        System.out.println("  java group6_cs8050_assignment2.VisualizationGenerator loadfactor");
     }
 }

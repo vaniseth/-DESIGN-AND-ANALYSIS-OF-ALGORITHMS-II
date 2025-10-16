@@ -9,11 +9,8 @@ import java.util.*;
 public class MainDriver {
 
     public static void main(String[] args) {
-        System.out.println("╔════════════════════════════════════════════════════════════╗");
-        System.out.println("║   CS 8050 - Assignment 2: Advanced Dictionaries & Hashing ║");
-        System.out.println("║   Dictionary Implementation & Analysis                     ║");
-        System.out.println("╚════════════════════════════════════════════════════════════╝\n");
-
+        System.out.println("\n Dictionary Implementation & Analysis");
+        System.out.println("By Group 6");
         // Run all demonstrations
         demonstrateBasicOperations();
         demonstrateHashFunctions();
@@ -22,16 +19,14 @@ public class MainDriver {
         runBenchmarkSuite();
         demonstrateLoadFactorImpact();
 
-        System.out.println("\n╔════════════════════════════════════════════════════════════╗");
-        System.out.println("║   All demonstrations completed successfully!               ║");
-        System.out.println("╚════════════════════════════════════════════════════════════╝");
+        System.out.println("\n All demonstrations completed successfully!");
     }
 
     /**
      * Demonstrate basic dictionary operations
      */
     private static void demonstrateBasicOperations() {
-        System.out.println("\n=== 1. Basic Dictionary Operations ===\n");
+        System.out.println("\n 1. Basic Dictionary Operations \n");
 
         // Create a chaining hash table
         ChainingHashTable<String, Integer> dict = new ChainingHashTable<>(new PolynomialHash());
@@ -67,7 +62,7 @@ public class MainDriver {
      * Demonstration of different hash functions
      */
     private static void demonstrateHashFunctions() {
-        System.out.println("\n=== 2. Hash Function Comparison ===\n");
+        System.out.println("\n 2. Hash Function Comparison \n");
 
         String[] testKeys = {"algorithm", "data", "structure", "hash", "collision",
                 "probing", "chaining", "dictionary", "performance", "analysis"};
@@ -106,7 +101,7 @@ public class MainDriver {
      * Demonstrate different probing strategies
      */
     private static void demonstrateProbingStrategies() {
-        System.out.println("\n=== 3. Probing Strategy Comparison ===\n");
+        System.out.println("\n 3. Probing Strategy Comparison \n");
 
         String[] keys = new String[50];
         for (int i = 0; i < keys.length; i++) {
@@ -144,7 +139,7 @@ public class MainDriver {
      * Demonstrate Word Frequency Counter application
      */
     private static void demonstrateWordFrequencyCounter() {
-        System.out.println("\n=== 4. Word Frequency Counter Application ===\n");
+        System.out.println("\n 4. Word Frequency Counter Application \n");
 
         // Generate sample text
         System.out.println("Generating sample text dataset...");
@@ -179,7 +174,7 @@ public class MainDriver {
      * Run comprehensive benchmark suite
      */
     private static void runBenchmarkSuite() {
-        System.out.println("\n=== 5. Comprehensive Benchmark Suite ===\n");
+        System.out.println("\n 5. Comprehensive Benchmark Suite \n");
         System.out.println("Running limited benchmark suite (use BenchmarkSuite.runFullSuite() for complete tests)...\n");
 
         // Run a smaller version for demonstration
@@ -249,7 +244,7 @@ public class MainDriver {
      * Demonstrate load factor impact
      */
     private static void demonstrateLoadFactorImpact() {
-        System.out.println("\n=== 6. Load Factor Impact Analysis ===\n");
+        System.out.println("\n 6. Load Factor Impact Analysis \n");
 
         double[] loadFactors = {0.25, 0.5, 0.75, 0.9, 0.95};
         HashFunction<String> hf = new PolynomialHash();
@@ -312,7 +307,7 @@ public class MainDriver {
      * Additional utility: Test with real-world text
      */
     public static void testWithRealText(String filename) {
-        System.out.println("\n=== Testing with Real Text File ===\n");
+        System.out.println("\n Testing with Real Text File \n");
 
         try {
             ChainingHashTable<String, Integer> dict = new ChainingHashTable<>(new PolynomialHash());
@@ -328,7 +323,7 @@ public class MainDriver {
      * Helper method to create sample test scenarios
      */
     public static void runCustomTest(int numKeys, double loadFactor, String hashFunctionName) {
-        System.out.println("\n=== Custom Test Configuration ===");
+        System.out.println("\n Custom Test Configuration ");
         System.out.println("Number of keys: " + numKeys);
         System.out.println("Load factor: " + loadFactor);
         System.out.println("Hash function: " + hashFunctionName);

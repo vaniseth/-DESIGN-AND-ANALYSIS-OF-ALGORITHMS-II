@@ -12,15 +12,10 @@ public class TestSuite {
     private static int testsFailed = 0;
 
     public static void main(String[] args) {
-        System.out.println("╔══════════════════════════════════════════════════════╗");
-        System.out.println("║   Dictionary Implementation Test Suite              ║");
-        System.out.println("╚══════════════════════════════════════════════════════╝\n");
+        System.out.println("\n Dictionary Implementation Test Suite");
 
         runAllTests();
-
-        System.out.println("\n╔══════════════════════════════════════════════════════╗");
-        System.out.println("║   Test Results                                       ║");
-        System.out.println("╚══════════════════════════════════════════════════════╝");
+        System.out.println("\n Test Results");
         System.out.println("Tests Passed: " + testsPassed);
         System.out.println("Tests Failed: " + testsFailed);
         System.out.println("Success Rate: " +
@@ -44,7 +39,7 @@ public class TestSuite {
      * Test basic dictionary operations
      */
     private static void testBasicOperations() {
-        System.out.println("\n=== Testing Basic Operations ===\n");
+        System.out.println("\n 1. Testing Basic Operations\n");
 
         ChainingHashTable<String, Integer> dict = new ChainingHashTable<>(new PolynomialHash());
 
@@ -86,7 +81,7 @@ public class TestSuite {
      * Test chaining hash table specifically
      */
     private static void testChainingHashTable() {
-        System.out.println("\n=== Testing Chaining Hash Table ===\n");
+        System.out.println("\n 2.Testing Chaining Hash Table \n");
 
         ChainingHashTable<String, Integer> dict = new ChainingHashTable<>(4, 0.75, new PolynomialHash());
 
@@ -116,7 +111,7 @@ public class TestSuite {
      * Test open addressing with linear probing
      */
     private static void testOpenAddressingLinear() {
-        System.out.println("\n=== Testing Open Addressing (Linear Probing) ===\n");
+        System.out.println("\n 3. Testing Open Addressing (Linear Probing)\n");
 
         OpenAddressingHashTable<String, Integer> dict =
                 new OpenAddressingHashTable<>(4, 0.5, new PolynomialHash(),
@@ -152,7 +147,7 @@ public class TestSuite {
      * Test open addressing with quadratic probing
      */
     private static void testOpenAddressingQuadratic() {
-        System.out.println("\n=== Testing Open Addressing (Quadratic Probing) ===\n");
+        System.out.println("\n 4. Testing Open Addressing (Quadratic Probing) \n");
 
         OpenAddressingHashTable<String, Integer> dict =
                 new OpenAddressingHashTable<>(4, 0.5, new PolynomialHash(),
@@ -174,7 +169,7 @@ public class TestSuite {
      * Test Cuckoo Hashing
      */
     private static void testCuckooHashing() {
-        System.out.println("\n=== Testing Cuckoo Hashing ===\n");
+        System.out.println("\n 5. Testing Cuckoo Hashing\n");
 
         CuckooHashTable<String, Integer> dict =
                 new CuckooHashTable<>(new PolynomialHash(), new SHA256Hash());
@@ -201,7 +196,7 @@ public class TestSuite {
      * Test different hash functions
      */
     private static void testHashFunctions() {
-        System.out.println("\n=== Testing Hash Functions ===\n");
+        System.out.println("\n 6.Testing Hash Functions \n");
 
         HashFunction<String>[] hashFunctions = new HashFunction[]{
                 new PolynomialHash(),
@@ -230,7 +225,7 @@ public class TestSuite {
      * Test load factor management
      */
     private static void testLoadFactorManagement() {
-        System.out.println("\n=== Testing Load Factor Management ===\n");
+        System.out.println("\n 7. Testing Load Factor Management \n");
 
         ChainingHashTable<String, Integer> dict =
                 new ChainingHashTable<>(4, 0.75, new PolynomialHash());
@@ -251,7 +246,7 @@ public class TestSuite {
      * Test resizing behavior
      */
     private static void testResizing() {
-        System.out.println("\n=== Testing Resizing ===\n");
+        System.out.println("\n 8. Testing Resizing \n");
 
         OpenAddressingHashTable<String, Integer> dict =
                 new OpenAddressingHashTable<>(2, 0.5, new PolynomialHash(),
@@ -281,7 +276,7 @@ public class TestSuite {
      * Test edge cases
      */
     private static void testEdgeCases() {
-        System.out.println("\n=== Testing Edge Cases ===\n");
+        System.out.println("\n 9. Testing Edge Cases \n");
 
         ChainingHashTable<String, Integer> dict = new ChainingHashTable<>(new PolynomialHash());
 
@@ -314,7 +309,7 @@ public class TestSuite {
      * Test performance characteristics
      */
     private static void testPerformance() {
-        System.out.println("\n=== Testing Performance ===\n");
+        System.out.println("\n 10. Testing Performance \n");
 
         HashFunction<String> hf = new PolynomialHash();
         int testSize = 10000;

@@ -76,7 +76,7 @@ public class BenchmarkSuite {
             results.addAll(testAdversarialDistribution(dataSize, loadFactors, hashFunctions));
         }
 
-        System.out.println("\n=== Benchmark Suite Complete ===");
+        System.out.println("\n Benchmark Suite Complete ");
         return results;
     }
 
@@ -305,7 +305,7 @@ public class BenchmarkSuite {
      * Print summary statistics
      */
     public static void printSummary(List<BenchmarkResult> results) {
-        System.out.println("\n=== Benchmark Results Summary ===\n");
+        System.out.println("\n Benchmark Results Summary \n");
 
         for (BenchmarkResult result : results) {
             System.out.println(result);
