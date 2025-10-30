@@ -1,0 +1,19 @@
+DataSize,Implementation,TotalInsertTime,TotalFindTime,AvgInsertTime,AvgFindTime
+1000,Chaining,0.23,0.16,228.83,157.13
+1000,Linear Probing,0.22,0.09,218.96,94.83
+1000,Quadratic Probing,0.22,0.09,222.33,93.13
+5000,Chaining,1.51,0.63,302.92,126.48
+5000,Linear Probing,1.08,0.51,216.28,101.72
+5000,Quadratic Probing,0.97,0.49,194.40,97.70
+10000,Chaining,3.12,1.30,312.39,129.86
+10000,Linear Probing,2.21,1.08,221.35,107.52
+10000,Quadratic Probing,2.13,1.06,212.73,105.69
+25000,Chaining,8.66,3.02,346.48,120.98
+25000,Linear Probing,7.64,2.70,305.59,107.98
+25000,Quadratic Probing,6.28,2.71,251.14,108.56
+50000,Chaining,18.78,5.84,375.54,116.82
+50000,Linear Probing,17.51,5.84,350.15,116.80
+50000,Quadratic Probing,15.05,6.30,300.96,126.09
+100000,Chaining,47.68,16.81,476.80,168.07
+100000,Linear Probing,34.74,19.80,347.37,197.97
+100000,Quadratic Probing,36.86,20.03,368.57,200.28
