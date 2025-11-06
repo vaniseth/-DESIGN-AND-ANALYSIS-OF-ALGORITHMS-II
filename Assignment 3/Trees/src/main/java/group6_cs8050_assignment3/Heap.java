@@ -1,10 +1,15 @@
-package org.example.Trees;
-//Auther: Abdelnasser Ouda
+package group6_cs8050_assignment3;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Heap<T extends Comparable<T>> implements Tree<T> , Serializable {
+/**
+ * Heap implementation
+ * Author: Group 6
+ */
+
+public abstract class Heap<T extends Comparable<T>> implements Tree<T>, Serializable {
     protected ArrayList<T> heap;
 
     public Heap() {

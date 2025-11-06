@@ -1,5 +1,4 @@
-package org.example.Trees;
-//Auther: Abdelnasser Ouda
+package group6_cs8050_assignment3;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;

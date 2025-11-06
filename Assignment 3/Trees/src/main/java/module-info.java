@@ -1,9 +1,8 @@
-module org.example.Trees {
+module group6_cs8050_assignment3 {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
 
-
-    opens org.example.Trees to javafx.fxml;
-    exports org.example.Trees;
+    exports group6_cs8050_assignment3;
+    opens group6_cs8050_assignment3 to javafx.fxml;
 }

@@ -1,4 +1,4 @@
-package org.example.Trees;
+package group6_cs8050_assignment3;
 //Auther: Abdelnasser Ouda
 import javafx.scene.paint.Color;
 

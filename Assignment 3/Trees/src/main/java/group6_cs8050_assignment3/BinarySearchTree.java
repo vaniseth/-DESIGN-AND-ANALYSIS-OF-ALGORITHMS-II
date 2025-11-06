@@ -1,15 +1,15 @@
-package org.example.Trees;
-//Auther: Abdelnasser Ouda
+package group6_cs8050_assignment3;
 import javafx.scene.paint.Color;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinarySearchTree<T extends Comparable<T>> implements Tree<T> , Serializable {
+public class BinarySearchTree<T extends Comparable<T>> implements Tree<T>, Serializable {
     private Node root;
     private int size;
 
-    private class Node implements TreeNode<T> , Serializable{
+    private class Node implements TreeNode<T>, Serializable{
         T value;
         Node left, right;
 
