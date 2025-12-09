@@ -1,6 +1,6 @@
 """
-Policy Gradient (REINFORCE) Implementation on MNIST Dataset
-Reinforcement Learning approach to digit classification
+Improved Policy Gradient (REINFORCE) Implementation on MNIST Dataset
+Key improvements for better accuracy
 """
 
 import numpy as np
@@ -15,53 +15,68 @@ import torch.nn.functional as F
 from torch.distributions import Categorical
 import os
 
-class PolicyNetwork(nn.Module):
+class ImprovedPolicyNetwork(nn.Module):
     """
-    Neural network that outputs action probabilities (policy)
+    Deeper neural network with batch normalization
     """
-    def __init__(self, input_dim=784, hidden_dim=256, output_dim=10):
-        super(PolicyNetwork, self).__init__()
+    def __init__(self, input_dim=784, hidden_dim=512, output_dim=10):
+        super(ImprovedPolicyNetwork, self).__init__()
         self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.bn1 = nn.BatchNorm1d(hidden_dim)
         self.fc2 = nn.Linear(hidden_dim, hidden_dim)
-        self.fc3 = nn.Linear(hidden_dim, output_dim)
-        self.dropout = nn.Dropout(0.2)
+        self.bn2 = nn.BatchNorm1d(hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim, 256)
+        self.bn3 = nn.BatchNorm1d(256)
+        self.fc4 = nn.Linear(256, output_dim)
+        self.dropout = nn.Dropout(0.3)
         
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = self.dropout(x)
-        x = F.relu(self.fc2(x))
-        x = self.dropout(x)
-        x = self.fc3(x)
+    def forward(self, x, training=True):
+        x = F.relu(self.bn1(self.fc1(x)))
+        if training:
+            x = self.dropout(x)
+        x = F.relu(self.bn2(self.fc2(x)))
+        if training:
+            x = self.dropout(x)
+        x = F.relu(self.bn3(self.fc3(x)))
+        if training:
+            x = self.dropout(x)
+        x = self.fc4(x)
         return F.softmax(x, dim=-1)
 
 
-class ValueNetwork(nn.Module):
+class ImprovedValueNetwork(nn.Module):
     """
-    Value network for baseline (reduce variance)
+    Deeper value network for better baseline
     """
-    def __init__(self, input_dim=784, hidden_dim=256):
-        super(ValueNetwork, self).__init__()
+    def __init__(self, input_dim=784, hidden_dim=512):
+        super(ImprovedValueNetwork, self).__init__()
         self.fc1 = nn.Linear(input_dim, hidden_dim)
-        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
-        self.fc3 = nn.Linear(hidden_dim, 1)
+        self.bn1 = nn.BatchNorm1d(hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, 256)
+        self.bn2 = nn.BatchNorm1d(256)
+        self.fc3 = nn.Linear(256, 1)
         
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        x = F.relu(self.bn1(self.fc1(x)))
+        x = F.relu(self.bn2(self.fc2(x)))
         return self.fc3(x)
 
 
-class REINFORCEAgent:
+class ImprovedREINFORCEAgent:
     """
-    Policy Gradient (REINFORCE) agent with baseline for MNIST classification
+    Improved Policy Gradient agent with better hyperparameters
     """
     
-    def __init__(self, learning_rate=0.0005, gamma=0.99, entropy_coef=0.01):
+    def __init__(self, learning_rate=0.001, gamma=0.0, entropy_coef=0.02):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.policy = PolicyNetwork().to(self.device)
-        self.value_net = ValueNetwork().to(self.device)
+        self.policy = ImprovedPolicyNetwork().to(self.device)
+        self.value_net = ImprovedValueNetwork().to(self.device)
+        
+        # Use different learning rates for policy and value
         self.policy_optimizer = optim.Adam(self.policy.parameters(), lr=learning_rate)
-        self.value_optimizer = optim.Adam(self.value_net.parameters(), lr=learning_rate)
+        self.value_optimizer = optim.Adam(self.value_net.parameters(), lr=learning_rate * 2)
+        
+        # Gamma=0 for non-episodic classification (no future rewards)
         self.gamma = gamma
         self.entropy_coef = entropy_coef
         self.results = {}
@@ -70,33 +85,33 @@ class REINFORCEAgent:
         print(f"Policy network parameters: {sum(p.numel() for p in self.policy.parameters()):,}")
         print(f"Value network parameters: {sum(p.numel() for p in self.value_net.parameters()):,}")
         
-    def select_action(self, state):
+    def select_action(self, state, training=True):
         """
         Select action based on policy network
-        Returns: action, log_prob, entropy
         """
-        state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-        probs = self.policy(state)
+        if len(state.shape) == 1:
+            state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+        else:
+            state = torch.FloatTensor(state).to(self.device)
+            
+        probs = self.policy(state, training=training)
         m = Categorical(probs)
         action = m.sample()
-        return action.item(), m.log_prob(action), m.entropy()
+        return action, m.log_prob(action), m.entropy()
     
     def get_value(self, state):
         """Get value estimate from value network"""
-        state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+        if len(state.shape) == 1:
+            state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+        else:
+            state = torch.FloatTensor(state).to(self.device)
         return self.value_net(state)
     
     def update_policy(self, states, actions, returns, log_probs, entropies):
         """
         Update policy using REINFORCE with baseline
-        
-        Time Complexity: O(n * m)
-        - n: number of samples in batch
-        - m: number of parameters in network
-        
-        Space Complexity: O(n + m)
         """
-        states_tensor = torch.FloatTensor(states).to(self.device)
+        states_tensor = torch.FloatTensor(np.array(states)).to(self.device)
         returns_tensor = torch.FloatTensor(returns).to(self.device)
         
         # Get value estimates (baseline)
@@ -105,29 +120,32 @@ class REINFORCEAgent:
         # Calculate advantages
         advantages = returns_tensor - values.detach()
         
-        # Policy loss
-        policy_loss = []
-        for log_prob, advantage in zip(log_probs, advantages):
-            policy_loss.append(-log_prob * advantage)
+        # Normalize advantages for stability
+        if len(advantages) > 1:
+            advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
+        
+        # Policy loss with advantages
+        log_probs_tensor = torch.stack(log_probs)
+        policy_loss = -(log_probs_tensor * advantages).mean()
         
         # Add entropy bonus for exploration
         entropy_loss = -self.entropy_coef * torch.stack(entropies).mean()
         
-        total_policy_loss = torch.stack(policy_loss).mean() + entropy_loss
+        total_policy_loss = policy_loss + entropy_loss
         
         # Update policy
         self.policy_optimizer.zero_grad()
         total_policy_loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.policy.parameters(), 1.0)
+        torch.nn.utils.clip_grad_norm_(self.policy.parameters(), 0.5)
         self.policy_optimizer.step()
         
-        # Value loss
+        # Value loss (MSE between predicted and actual returns)
         value_loss = F.mse_loss(values, returns_tensor)
         
         # Update value network
         self.value_optimizer.zero_grad()
         value_loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.value_net.parameters(), 1.0)
+        torch.nn.utils.clip_grad_norm_(self.value_net.parameters(), 0.5)
         self.value_optimizer.step()
         
         return total_policy_loss.item(), value_loss.item()
@@ -141,7 +159,7 @@ class REINFORCEAnalyzer:
     def __init__(self):
         self.results = {}
         
-    def load_mnist_data(self, n_samples=10000):
+    def load_mnist_data(self, n_samples=20000):
         """Load and preprocess MNIST dataset"""
         print("Loading MNIST dataset...")
         
@@ -171,12 +189,12 @@ class REINFORCEAnalyzer:
         
         return X_train, X_test, y_train, y_test
     
-    def train_agent(self, agent, X_train, y_train, episodes=100, batch_size=64):
+    def train_agent(self, agent, X_train, y_train, episodes=200, batch_size=128):
         """
         Train REINFORCE agent
         """
         print("=" * 70)
-        print("Training REINFORCE Agent")
+        print("Training Improved REINFORCE Agent")
         print("=" * 70)
         
         n_samples = len(X_train)
@@ -213,36 +231,27 @@ class REINFORCEAnalyzer:
                 batch_rewards = []
                 batch_entropies = []
                 
-                for state, true_label in zip(batch_X, batch_y):
-                    # Select action
-                    action, log_prob, entropy = agent.select_action(state)
+                # Process batch at once for efficiency
+                actions, log_probs, entropies = agent.select_action(batch_X, training=True)
+                
+                for j, (action, log_prob, entropy, true_label) in enumerate(
+                    zip(actions, log_probs, entropies, batch_y)
+                ):
+                    # Binary reward: 1 for correct, 0 for wrong
+                    reward = 1.0 if action.item() == true_label else 0.0
                     
-                    # Better reward shaping: +1 for correct, -0.1 for wrong
-                    reward = 1.0 if action == true_label else -0.1
-                    
-                    batch_states.append(state)
-                    batch_actions.append(action)
+                    batch_states.append(batch_X[j])
+                    batch_actions.append(action.item())
                     batch_log_probs.append(log_prob)
                     batch_rewards.append(reward)
                     batch_entropies.append(entropy)
                     
-                    if action == true_label:
+                    if action.item() == true_label:
                         correct += 1
-                        total_reward += 1.0
-                    else:
-                        total_reward -= 0.1
+                    total_reward += reward
                 
-                # Calculate discounted returns
-                returns = []
-                R = 0
-                for r in reversed(batch_rewards):
-                    R = r + agent.gamma * R
-                    returns.insert(0, R)
-                
-                # Normalize returns
-                returns = np.array(returns)
-                if len(returns) > 1:
-                    returns = (returns - returns.mean()) / (returns.std() + 1e-9)
+                # For non-episodic tasks, returns = rewards (gamma=0)
+                returns = batch_rewards
                 
                 # Update policy
                 policy_loss, value_loss = agent.update_policy(
@@ -274,6 +283,7 @@ class REINFORCEAnalyzer:
                       f"Accuracy: {accuracy:.4f} | "
                       f"Avg Reward: {avg_reward:.4f} | "
                       f"Loss: {avg_policy_loss:.4f} | "
+                      f"Entropy: {avg_entropy:.4f} | "
                       f"Time: {episode_time:.2f}s")
         
         self.results['training'] = {
@@ -301,15 +311,20 @@ class REINFORCEAnalyzer:
         action_probs = []
         
         with torch.no_grad():
-            for state, true_label in zip(X_test, y_test):
-                state_tensor = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
-                probs = agent.policy(state_tensor)
-                action = torch.argmax(probs, dim=1).item()
-                predictions.append(action)
-                action_probs.append(probs.cpu().numpy()[0])
+            # Batch evaluation for speed
+            batch_size = 256
+            for i in range(0, len(X_test), batch_size):
+                batch_X = X_test[i:i+batch_size]
+                batch_y = y_test[i:i+batch_size]
                 
-                if action == true_label:
-                    correct += 1
+                state_tensor = torch.FloatTensor(batch_X).to(agent.device)
+                probs = agent.policy(state_tensor, training=False)
+                actions = torch.argmax(probs, dim=1)
+                
+                predictions.extend(actions.cpu().numpy())
+                action_probs.extend(probs.cpu().numpy())
+                
+                correct += (actions.cpu().numpy() == batch_y).sum()
         
         accuracy = correct / len(y_test)
         
@@ -428,7 +443,7 @@ class REINFORCEAnalyzer:
                     linewidth=2, color='#9D4EDD', marker='d', markersize=3)
             ax5.set_xlabel('Episode', fontsize=11)
             ax5.set_ylabel('Training Time (seconds)', fontsize=11)
-            ax5.set_title('Time Complexity Analysis\nO(n × m)', 
+            ax5.set_title('Time per Episode', 
                          fontsize=12, fontweight='bold')
             ax5.grid(True, alpha=0.3)
             
@@ -446,18 +461,13 @@ class REINFORCEAnalyzer:
                     linewidth=2, color='#F18F01', marker='*', markersize=3)
             ax6.set_xlabel('Episode', fontsize=11)
             ax6.set_ylabel('Policy Entropy', fontsize=11)
-            ax6.set_title('Exploration Metric\n(Higher = More Exploration)', 
+            ax6.set_title('Exploration Metric\n(Entropy over Time)', 
                          fontsize=12, fontweight='bold')
             ax6.grid(True, alpha=0.3)
-            
-            # Add annotation about entropy
-            ax6.text(0.05, 0.05, 'High entropy = exploring\nLow entropy = exploiting', 
-                    transform=ax6.transAxes, fontsize=9,
-                    bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
         
         plt.tight_layout()
-        plt.savefig('images/reinforce_analysis.png', dpi=150, bbox_inches='tight')
-        print("✓ Analysis saved as 'images/reinforce_analysis.png'")
+        plt.savefig('images/improved_reinforce_analysis.png', dpi=150, bbox_inches='tight')
+        print("✓ Analysis saved as 'images/improved_reinforce_analysis.png'")
         
         print("✓ All visualizations complete!\n")
         
@@ -467,7 +477,7 @@ class REINFORCEAnalyzer:
 def main():
     """Main execution function"""
     print("\n" + "=" * 70)
-    print("POLICY GRADIENT (REINFORCE) ON MNIST DATASET")
+    print("IMPROVED POLICY GRADIENT (REINFORCE) ON MNIST DATASET")
     print("=" * 70)
     print()
     
@@ -478,15 +488,18 @@ def main():
     # Initialize analyzer
     analyzer = REINFORCEAnalyzer()
     
-    # Load MNIST data
-    X_train, X_test, y_train, y_test = analyzer.load_mnist_data(n_samples=10000)
+    # Load MNIST data (more samples)
+    X_train, X_test, y_train, y_test = analyzer.load_mnist_data(n_samples=20000)
     
-    # Initialize REINFORCE agent
-    agent = REINFORCEAgent(learning_rate=0.0005, gamma=0.99, entropy_coef=0.01)
-    analyzer.agent = agent
+    # Initialize improved agent with better hyperparameters
+    agent = ImprovedREINFORCEAgent(
+        learning_rate=0.001,   # Higher learning rate
+        gamma=0.0,             # No discounting for single-step classification
+        entropy_coef=0.02      # Slightly higher entropy for exploration
+    )
     
-    # Train agent (more episodes for better convergence)
-    analyzer.train_agent(agent, X_train, y_train, episodes=100, batch_size=64)
+    # Train agent (more episodes)
+    analyzer.train_agent(agent, X_train, y_train, episodes=200, batch_size=128)
     
     # Evaluate agent
     analyzer.results['y_test'] = y_test
@@ -499,8 +512,15 @@ def main():
     print("ANALYSIS COMPLETE!")
     print("=" * 70)
     print(f"\nFinal Test Accuracy: {accuracy:.4f}")
+    print("\nKey Improvements:")
+    print("  • Deeper network (512 → 512 → 256 → 10)")
+    print("  • Batch normalization for stability")
+    print("  • Binary rewards (1 or 0) instead of penalties")
+    print("  • Gamma=0 (no discounting for non-episodic tasks)")
+    print("  • Larger batches (128) and more training samples")
+    print("  • More episodes (200) for better convergence")
     print("\nOutput files:")
-    print("  • images/reinforce_analysis.png - Complete analysis dashboard")
+    print("  • images/improved_reinforce_analysis.png")
     print()
     
     return analyzer
