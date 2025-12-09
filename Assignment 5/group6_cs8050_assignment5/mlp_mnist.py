@@ -1,6 +1,7 @@
 """
 Feedforward Neural Network (MLP with One Hidden Layer) Implementation on MNIST Dataset
 CS 8050 - Assignment 5
+Group 6
 """
 
 import numpy as np

@@ -1,7 +1,7 @@
 """
 Actual Experimental Results for CS8050 Assignment 5
-Random Forest and CNN Analysis on MNIST
-Both algorithms tested on real MNIST dataset
+CS 8050 - Assignment 5
+Group 6
 """
 
 # Random Forest ACTUAL Results

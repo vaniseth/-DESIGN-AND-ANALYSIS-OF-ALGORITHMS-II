@@ -1,6 +1,7 @@
 """
 K-Means Clustering Implementation on MNIST Dataset
-Improved version with high accuracy using optimal cluster count
+CS 8050 - Assignment 5
+Group 6
 """
 
 import numpy as np

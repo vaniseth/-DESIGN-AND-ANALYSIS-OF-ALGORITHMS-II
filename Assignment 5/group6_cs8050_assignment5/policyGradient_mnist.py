@@ -1,6 +1,7 @@
 """
 Improved Policy Gradient (REINFORCE) Implementation on MNIST Dataset
-Key improvements for better accuracy
+CS 8050 - Assignment 5
+Group 6
 """
 
 import numpy as np
